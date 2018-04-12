@@ -1,0 +1,128 @@
+﻿0MYsql：   mysql -uroot -p
+密码：    chenping123
+使用：    show databases;
+创建：    Create database JG36;
+使用：    use  JG36;
+删除：    drop database JG36;
+指定字符集和校对规则：   create database JG36 character set utf8 collate utf8_bin;
+显示当前使用     ①select database();
+                 ②show create  database JG36\G;（格式化）
+
+表：  创建Create table表名（
+                           字段名(列名)数据类型[条件]，
+                           字段名(列名)数据类型[条件]，
+                           字段名(列名)数据类型[条件]）；
+      查找  ①describe（简写desc） 表名； 
+             ②show tables；
+              ③show create table 表名；
+
+       修改表名①Alter table表名rename新表名； 
+               ②rename table表名 to 新表名；
+       新添加 alter table xs
+               add gender char(9) first;
+
+查看表的内容     select * from JG36;
+添加数据      insert into JG36 (name) values(10);
+更新数据    update  set
+
+
+简单查询   select age from jg12;
+条件查询   ①用where过滤条件   select 字段名，字段名from表名where条件  
+             select * from jg12 where age<113;
+           ②用in，判断是否在一个集合里面。select 字段名，字段名from表名where字段名in（集合）
+             select * from jg12 where age in+(集合，或者几个元素);
+                 可以和not一起用
+                 select * from jg12 where age not in+(集合，或者几个元素);
+           ③select * from jg12 where age between。。and。。；
+                 可以和not一起用
+                 select * from jg12 where age not between。。and。。；
+           ④ select 字段名，字段名 from 表名 where 字段名 is null
+              select * from jg12 where age is null；
+                 可以和not一起用
+                  select * from jg12 where age is not null；
+           ⑤distinct排除重复值
+           ⑥like模糊查询{%对要查询的字符串不做长度限制，_对要查询的字符串寻要要要对应,}
+              select * from jg12 where name like '%e%';
+              select * from jg12 where name like 'j___';空格也要一个下划线（）
+              原本就有%，_ 就需要\转义
+               select * from jg12 where name like '%\_%';
+           ⑦ select 字段名，字段名 from 表名 where  条件表达式and条件表达式
+               select * from jg12 where age 。。and。。；
+
+函数  count还回行数
+       ① select count(*) from stu;（总）
+       ②select count(stuID) from stu;（部分）
+
+      sum还回某列的和求和
+        ①select sum(stuScore) from stu;（总和）
+        ② select sum(stuscore) from stu where stuID<3;（条件）
+        ③ select sum(stuscore) from stu where stuID in(1,2,3);
+
+      avg平均值
+        ①select avg(stuscore) from stu;
+        ②select avg(stuscore) from stu where stuID<3;
+        ③select avg(stuscore) from stu where stuID in(1,2,3);
+        ④ select sum(stuscore)/count(*) from stu where stuID in(1,2,3);（有空集）
+
+      最值
+        ①select max(stuscore) from stu;（最大值）
+        ②select min(stuscore) from stu;（最大值）
+ 
+排序
+         ①升序asc和order by连用
+             select * from stu order by stuAge （asc）可省略;省略后自动为升序
+           （空集当做0）
+         ②降序desc和order by连用
+             select * from stu order by stuAge desc;
+           
+         ③多字段排序
+            select * from stu order by stuAge,stuScore desc;
+
+分组查询  ①分组group by
+          select stuGender from stu group by stuGender;
+          ②分组加聚合
+          select stuGender,sum(stuScore) from stu group by stuGender;
+          ③和having连用（having过滤）→where在分组前having在分组后
+          select stuGender,sum(stuScore) from stu group by stuGender having sum(stuScore)>1000;
+限制查询结果
+           ①limit a，b；（a是开始的标号，b是显示的总条数）第一条下标为0
+                select * from stu limit 9, 11;
+为表和列名取别名（为了自己查询习惯）
+            select stuname as（可省略） xuehao from stu;
+
+
+
+
+创建外键约束add constraint 外键名 foreign key（外键字段名）references 外表表名（主键字段名）
+                 alter table stu,
+              -> add constraint tttt foreign key(classno) references class(id); 
+
+
+删除外键约束     alter table stu
+              -> drop foreign key tttt;
+
+
+内连接   select * from 表1 innerjoin  表2；
+          select * from dep inner join em;
+
+         select * from 表1  inner可以省略 join 表2 on：效率高/where 表1 关系字段=表2 关系字段;  
+                             
+          select * from em inner join dep on em.did=dep.did;
+外联接 
+      左外连接   left outer join
+                 select * from dep left outer join em on em.did=dep.did;
+      右外连接   right outer join
+                 select * from dep right outer join em on em.did=dep.did;
+      全外连接   full
+                 select * from dep full outer join em on em.did=dep.did;
+
+     select * from dep right outer join em on em.did=dep.did
+     union
+     select * from dep left outer join em on em.did=dep.did;
+
+
+
+
+自连接 
+       select q.id,q.name,w.name as did from em q inner join em w on q.id=w.id;
+ 
